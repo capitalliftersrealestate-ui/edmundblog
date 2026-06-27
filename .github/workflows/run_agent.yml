@@ -35,10 +35,17 @@ jobs:
         run: node agent.js
 
       - name: Save the New Article Back to Repository
-        run: |
+      run: |
           git config --global user.name 'Edmund Blog Automation'
-          git config --global user.email 'agent@edmundblog.local'
-          git add published_posts/
-          git commit -m "Auto-published blog post: $(date +'%Y-%m-%d')"
-          git push
-          # This saves the new article into your repository automatically
+          git config --global user.email 'Edmund.initiative@gmail.com'
+          
+          # Force track only blogs.json while ignoring node_modules
+          git add blogs.json
+          
+          # Check if there are actual changes to commit so it won't crash if empty
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Automated update: Added new property insights [skip ci]"
+            git push origin main
+          fi
