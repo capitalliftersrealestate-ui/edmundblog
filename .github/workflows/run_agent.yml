@@ -2,14 +2,17 @@ name: Automated Real Estate Blog Pipeline
 
 on:
   repository_dispatch:
-    types: [trigger-pipeline]
-  workflow_dispatch:
+    types: [trigger_pipeline]
+    # Matches the exact event_type configured in your n8n setup
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Grants permission to save changes back to the repository
+
     steps:
-      - name: Checkout Source Code Repository
+      - name: Download Your Repository Files
         uses: actions/checkout@v4
 
       - name: Configure Execution Node Env Environment
@@ -31,15 +34,15 @@ jobs:
       - name: Save the New Article Back to Repository
         run: |
           git config --global user.name 'Edmund Blog Automation'
-          git config --global user.email 'Edmund.initiative@gmail.com'
+          git config --global user.email 'agent@edmundblog.local'
           
-          # Explicitly stage only the updated database ledger file
+          # Strictly stage only the updated database ledger file
           git add blogs.json
           
-          # Commit and push only if changes were actually made
+          # Push only if new content has modified the json matrix
           if git diff --staged --quiet; then
-            echo "No new changes found to process."
+            echo "No changes found to process."
           else
-            git commit -m "Automated update: Added new property insights [skip ci]"
+            git commit -m "Auto-published blog post: $(date +'%Y-%m-%d') [skip ci]"
             git push origin main
           fi
