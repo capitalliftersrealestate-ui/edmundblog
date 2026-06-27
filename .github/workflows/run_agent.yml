@@ -2,49 +2,43 @@ name: Automated Real Estate Blog Pipeline
 
 on:
   repository_dispatch:
-    types: [trigger_pipeline]
-    # This line means: run this workflow when n8n sends the trigger_pipeline signal
+    types: [trigger-pipeline]
+  workflow_dispatch:
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    # GitHub provides this free server automatically
-    permissions:
-      contents: write
-      # This allows the server to save new articles back to your repository
-
     steps:
-      - name: Download Your Repository Files
+      - name: Checkout Source Code Repository
         uses: actions/checkout@v4
-        # This copies all your files onto the temporary server
 
-      - name: Install Node.js
+      - name: Configure Execution Node Env Environment
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          
+          node-version: '20'
 
       - name: Install Script Dependencies
-        run: npm install
-        # This installs axios, cheerio, and the Groq SDK
+        run: |
+          npm init -y
+          npm pkg set type="module"
+          npm install groq-sdk
 
       - name: Run the Blog Agent Script
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          # This securely passes your Groq API key to the script
         run: node agent.js
 
       - name: Save the New Article Back to Repository
-      run: |
+        run: |
           git config --global user.name 'Edmund Blog Automation'
           git config --global user.email 'Edmund.initiative@gmail.com'
           
-          # Force track only blogs.json while ignoring node_modules
+          # Explicitly stage only the updated database ledger file
           git add blogs.json
           
-          # Check if there are actual changes to commit so it won't crash if empty
+          # Commit and push only if changes were actually made
           if git diff --staged --quiet; then
-            echo "No changes to commit"
+            echo "No new changes found to process."
           else
             git commit -m "Automated update: Added new property insights [skip ci]"
             git push origin main
