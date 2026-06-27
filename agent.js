@@ -21,11 +21,9 @@ async function runPipeline() {
     });
     const $ = cheerio.load(response.data);
     const headline = $('h1').first().text().trim() || 'Singapore Property Market Update';
-    researchPayload = `Latest headline from Capital Lifters: ${headline}. Market shows continued interest from upgraders and investors.`;
-    console.log('Research complete.');
+    researchPayload = `Latest headline from Capital Lifters: ${headline}.`;
   } catch (error) {
-    console.log('Using fallback data:', error.message);
-    researchPayload = 'Fallback: Singapore Core Central Region (CCR) transaction volumes remain elevated. New launch sales continue to attract strong interest from both locals and foreign investors.';
+    researchPayload = 'Fallback: Singapore Core Central Region (CCR) transaction volumes remain elevated.';
   }
 
   console.log('=== PHASE 2: WRITING WITH GROQ AI ===');
@@ -41,11 +39,16 @@ async function runPipeline() {
     This week's Singapore property market data: ${researchPayload}
     Writing guidelines to follow strictly: ${brandGuidelines}
     
-    Provide your output STRICTLY in the following JSON format without conversational text or markdown code blocks:
+    ORGANIZATION REQUIREMENTS:
+    - Break the article down into exactly 2 or 3 clear, well-organized sub-sections.
+    - Introduce each sub-section by putting the title on its own line inside brackets, exactly like this: [Sub-section Title Here]
+    - Do NOT use markdown symbols like ## or ** inside the content text.
+    
+    Provide your output STRICTLY in the following JSON format:
     {
       "title": "An engaging, professional article title",
-      "excerpt": "A short, catchy 2-sentence summary description of the article for the home page feed.",
-      "content": "The full blog article text written in clean paragraphs. Use ## for major section headers. Do NOT double-space or write text strings that look like titles inside the paragraphs."
+      "excerpt": "A short, catchy 2-sentence summary description.",
+      "content": "[Introduction]\\nYour introductory paragraph text goes here.\\n\\n[Market Outlook]\\nYour second body paragraph section analysis goes here."
     }
   `;
 
@@ -56,7 +59,6 @@ async function runPipeline() {
   });
 
   const generatedData = JSON.parse(completion.choices[0].message.content);
-  console.log('Article writing complete.');
 
   console.log('=== PHASE 3: UPDATE DATABASE MATRIX ===');
   let blogDatabase = [];
@@ -74,9 +76,9 @@ async function runPipeline() {
   
   const articleId = String(Date.now());
   
-  // Creates a completely unique, randomized photo selection from modern architectural pools each execution
-  const randomPhotoId = Math.floor(Math.random() * 1000);
-  const dynamicImageUri = `https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80&sig=${randomPhotoId}`;
+  // Dynamic randomized image rotation index mapping
+  const randomPhotoId = Math.floor(Math.random() * 500) + 100;
+  const dynamicImageUri = `https://images.unsplash.com/photo-${1512917774080 + randomPhotoId}?auto=format&fit=crop&w=1200&q=80&sig=${articleId}`;
 
   const newPostEntry = {
     id: articleId,
@@ -90,7 +92,7 @@ async function runPipeline() {
 
   blogDatabase.unshift(newPostEntry);
   fs.writeFileSync(databasePath, JSON.stringify(blogDatabase, null, 2));
-  console.log(`Database successfully updated with dynamic article image asset signatures.`);
+  console.log(`Pipeline complete. Ready to run.`);
 }
 
 runPipeline().catch(console.error);
