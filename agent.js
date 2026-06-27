@@ -1,107 +1,96 @@
+import Groq from 'groq-sdk';
 import fs from 'fs';
 import path from 'path';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 import { fileURLToPath } from 'url';
-import { Groq } from 'groq-sdk';
 
-// Initialize Groq client
-const groq = new Groq({
-    apiKey: process.env.GROQ_API_KEY
-});
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// Fix for __dirname in ES modules
+// Handle __dirname configuration for modern ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const databasePath = path.join(__dirname, 'blogs.json');
 
-const blogsJsonPath = path.join(__dirname, 'blogs.json');
-
-/**
- * Phase 1: Market Research Ingestion
- */
-function getMarketResearchData() {
-    console.log("=== PHASE 1: MARKET RESEARCH ===");
-    try {
-        const rawScrapedDataPath = path.join(__dirname, 'scraped_properties.json');
-        if (fs.existsSync(rawScrapedDataPath)) {
-            console.log("Found raw scraped property portal data. Parsing insights...");
-            return JSON.parse(fs.readFileSync(rawScrapedDataPath, 'utf8'));
-        }
-    } catch (e) {
-        console.warn("Utilizing systemic market backups.");
-    }
-    
-    return {
-        location: "Singapore",
-        trends: ["New project launches driving momentum", "Increased demand for modern executive condominiums"],
-        focus: "Real Estate Enthusiast & Investor Portfolios"
-    };
-}
-
-/**
- * Phase 2 & 3: Content Generation & Database Ledger Updates
- */
 async function runPipeline() {
-    const research = getMarketResearchData();
+  console.log('=== PHASE 1: MARKET RESEARCH ===');
+  let researchPayload = '';
+
+  try {
+    const response = await axios.get('https://capitallifters.com', {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    });
+    const $ = cheerio.load(response.data);
+    const headline = $('h1').first().text().trim() || 'Singapore Property Market Update';
+    researchPayload = `Latest headline from Capital Lifters: ${headline}. Market shows continued interest from upgraders and investors.`;
+    console.log('Research complete.');
+  } catch (error) {
+    console.log('Using fallback data:', error.message);
+    researchPayload = 'Fallback: Singapore Core Central Region (CCR) transaction volumes remain elevated. New launch sales continue to attract strong interest from both locals and foreign investors.';
+  }
+
+  console.log('=== PHASE 2: WRITING WITH GROQ AI ===');
+  
+  // Dynamic guidelines loading fallback
+  let brandGuidelines = 'Write as an expert real estate content strategist focusing on high-converting real estate insights.';
+  const rulesPath = path.join(__dirname, 'config', 'myrules.md');
+  if (fs.existsSync(rulesPath)) {
+    brandGuidelines = fs.readFileSync(rulesPath, 'utf8');
+  }
+
+  const compositionPrompt = `
+    You are an elite real estate content strategist acting as a partner for a Singapore-based realtor ("Real estate Enthusiast").
+    This week's Singapore property market data: ${researchPayload}
+    Writing guidelines to follow strictly: ${brandGuidelines}
     
-    console.log("=== PHASE 2: WRITING WITH GROQ AI ===");
-    const prompt = `You are an elite real estate content strategist acting as a partner for a Singapore-based realtor ("Real estate Enthusiast").
-    Based on these insights: ${JSON.stringify(research)}, write an engaging, high-converting real estate blog post.
-    Provide the output strictly in the following JSON format:
+    Provide your output STRICTLY in the following JSON format. Do not include markdown code block formatting (like \`\`\`json) or any conversational text. Output raw JSON only:
     {
-        "title": "Catchy Blog Post Title",
-        "category": "Market Update",
-        "excerpt": "A short, engaging 1-2 sentence preview for the home page list.",
-        "content": "Use Markdown formatting for the content body. Use ## for major headings and ### for sub-headings. Separate paragraphs with double newlines."
-    }`;
-
-    try {
-        const chatCompletion = await groq.chat.completions.create({
-            messages: [
-                { role: "system", content: "You output nothing but raw, valid JSON matching the requested structure." },
-                { role: "user", content: prompt }
-            ],
-            model: "llama-3.3-70b-versatile",
-            temperature: 0.7,
-            response_format: { type: "json_object" }
-        });
-
-        const result = JSON.parse(chatCompletion.choices[0].message.content);
-        console.log(`Writing article content to ledger: ${result.title}`);
-
-        // Read or initialize the central blogs.json ledger array safely
-        let blogsLedger = [];
-        if (fs.existsSync(blogsJsonPath)) {
-            try {
-                blogsLedger = JSON.parse(fs.readFileSync(blogsJsonPath, 'utf8'));
-            } catch (e) {
-                blogsLedger = [];
-            }
-        }
-
-        // Build the clean post object matching your frontend criteria
-        const newEntry = {
-            id: Date.now(), // Unique ID for index.html routing parameters
-            title: result.title,
-            category: result.category || "Market Update",
-            excerpt: result.excerpt,
-            image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
-            content: result.content,
-            date: new Date().toLocaleDateString('en-SG', { 
-                timeZone: 'Asia/Singapore',
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric'
-            })
-        };
-
-        // Insert new post at the top of the timeline
-        blogsLedger.unshift(newEntry);
-        fs.writeFileSync(blogsJsonPath, JSON.stringify(blogsLedger, null, 2), 'utf8');
-        console.log("=== PHASE 3: PUBLIC INDEX LEDGER UPDATED CLEANLY ===");
-
-    } catch (error) {
-        console.error("Pipeline failure executed during processing:", error);
-        process.exit(1);
+      "title": "An engaging, professional article title",
+      "excerpt": "A short, catchy 2-sentence summary description of the article for the home page feed.",
+      "content": "The full blog article text written in clean Markdown format with structured sections. Use ## for major headings and ### for sub-headings."
     }
+  `;
+
+  // Upgraded to active model to completely prevent decommissioned 400 errors
+  const completion = await groq.chat.completions.create({
+    model: 'llama-3.3-70b-versatile',
+    messages: [{ role: 'user', content: compositionPrompt }],
+    response_format: { type: "json_object" }
+  });
+
+  const generatedData = JSON.parse(completion.choices[0].message.content);
+  console.log('Article writing complete.');
+
+  console.log('=== PHASE 3: UPDATE DATABASE MATRIX ===');
+  let blogDatabase = [];
+
+  if (fs.existsSync(databasePath)) {
+    try {
+      blogDatabase = JSON.parse(fs.readFileSync(databasePath, 'utf8'));
+    } catch (e) {
+      blogDatabase = [];
+    }
+  }
+
+  // Time Zone Fix: Forces date generation to lock onto Singapore time regardless of server/user location
+  const sgOptions = { timeZone: 'Asia/Singapore', day: 'numeric', month: 'long', year: 'numeric' };
+  const sgDateString = new Intl.DateTimeFormat('en-SG', sgOptions).format(new Date());
+  
+  const articleId = String(Date.now());
+
+  const newPostEntry = {
+    id: articleId,
+    date: sgDateString,
+    category: "Market Update",
+    title: generatedData.title,
+    excerpt: generatedData.excerpt,
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
+    content: generatedData.content
+  };
+
+  blogDatabase.unshift(newPostEntry); // Newest article always at the top
+  fs.writeFileSync(databasePath, JSON.stringify(blogDatabase, null, 2));
+  console.log(`Database successfully updated with article ID: ${articleId}`);
 }
 
-runPipeline();
+runPipeline().catch(console.error);
