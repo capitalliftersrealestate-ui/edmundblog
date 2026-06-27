@@ -3,13 +3,12 @@ name: Automated Real Estate Blog Pipeline
 on:
   repository_dispatch:
     types: [trigger_pipeline]
-    # Matches the exact event_type configured in your n8n setup
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Grants permission to save changes back to the repository
+      contents: write
 
     steps:
       - name: Download Your Repository Files
@@ -18,13 +17,13 @@ jobs:
       - name: Configure Execution Node Env Environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install Script Dependencies
         run: |
           npm init -y
           npm pkg set type="module"
-          npm install groq-sdk
+          npm install groq-sdk axios cheerio
 
       - name: Run the Blog Agent Script
         env:
@@ -36,10 +35,9 @@ jobs:
           git config --global user.name 'Edmund Blog Automation'
           git config --global user.email 'agent@edmundblog.local'
           
-          # Strictly stage only the updated database ledger file
+          # Strictly stage only the single data register file
           git add blogs.json
           
-          # Push only if new content has modified the json matrix
           if git diff --staged --quiet; then
             echo "No changes found to process."
           else
