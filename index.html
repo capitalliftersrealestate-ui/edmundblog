@@ -3,24 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edmund Lim | Property Insights & Market Analysis Blog</title>
-    <!-- Tailwind CSS CDN for premium design layouts -->
+    <title>Real estate Enthusiast | Property Insights & Market Analysis</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for professional modern iconography -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 antialiased selection:bg-blue-500 selection:text-white">
 
-    <!-- Header Navigation Section -->
     <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- Brand Portfolio Header -->
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-full overflow-hidden border border-slate-200">
                     <img src="366373.jpg" alt="Edmund Lim" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=150&q=80'">
@@ -29,8 +23,6 @@
                     Edmund Lim <span class="text-blue-600 font-medium text-sm block sm:inline sm:ml-1">Insights</span>
                 </span>
             </div>
-            
-            <!-- Navigation Links -->
             <div class="flex items-center space-x-6">
                 <a href="index.html" class="text-sm font-semibold text-blue-600 transition-colors">Blog Home</a>
                 <a href="tel:+6589179878" class="inline-flex items-center justify-center w-11 h-11 border border-slate-200 rounded-full text-slate-700 hover:bg-slate-50 hover:text-blue-600 hover:border-blue-200 transition-all">
@@ -40,16 +32,13 @@
         </div>
     </header>
 
-    <!-- Newcomer Welcome Hero Section -->
     <section class="bg-white border-b border-slate-100 py-16 px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
-            <!-- Edmund's Welcome Profile Image Container -->
             <div class="flex-shrink-0">
                 <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden ring-4 ring-blue-50 border-2 border-white shadow-lg mx-auto">
-                    <img src="366373.jpg" alt="Edmund Lim Welcome Image" class="w-full h-full object-cover object-top" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=300&q=80'">
+                    <img src="366373.jpg" alt="Edmund Lim Profile Picture" class="w-full h-full object-cover object-top" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=300&q=80'">
                 </div>
             </div>
-            <!-- Welcome Copy Text -->
             <div class="space-y-3 max-w-xl">
                 <span class="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block">Welcome to my Blog</span>
                 <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">Hey there, I'm Edmund Lim</h1>
@@ -60,10 +49,7 @@
         </div>
     </section>
 
-    <!-- Blog Archive Main Section -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        
-        <!-- Section Header Title -->
         <div class="mb-10 flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-4 gap-2">
             <div>
                 <h2 class="text-2xl font-bold tracking-tight text-slate-950">Latest Analysis</h2>
@@ -72,12 +58,10 @@
             <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full inline-block self-start sm:self-auto" id="archive-count">0 Articles Available</span>
         </div>
 
-        <!-- Featured Blog Card Slot (Dynamically populated with the newest post) -->
         <section id="featured-section" class="mb-20 hidden">
             <div class="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 gap-0">
                 <div class="lg:col-span-7 h-64 sm:h-96 lg:h-full min-h-[360px] relative bg-slate-900">
-                    <img id="featured-image" src="" alt="Featured Post Cover Image" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-transparent"></div>
+                    <img id="featured-image" src="" alt="Featured Post Cover Image" class="w-full h-full object-cover opacity-90">
                 </div>
                 <div class="lg:col-span-5 p-6 sm:p-10 flex flex-col justify-between space-y-6">
                     <div class="space-y-4">
@@ -88,9 +72,7 @@
                         <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 leading-tight hover:text-blue-600 transition-colors">
                             <a href="#" id="featured-link">Loading latest article...</a>
                         </h2>
-                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed font-light line-clamp-5" id="featured-excerpt">
-                            Extracting contents...
-                        </p>
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed font-light line-clamp-5" id="featured-excerpt">Extracting contents...</p>
                     </div>
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
                         <span class="text-xs font-medium text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 5 min read</span>
@@ -102,7 +84,6 @@
             </div>
         </section>
 
-        <!-- No Posts Fallback Display Placeholder -->
         <div id="no-posts" class="text-center py-20 bg-white border border-slate-100 rounded-3xl shadow-sm">
             <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto text-blue-600 text-xl mb-4">
                 <i class="fa-solid fa-newspaper"></i>
@@ -111,20 +92,14 @@
             <p class="text-slate-500 font-light mt-2">The automated content system has not recorded any publications yet.</p>
         </div>
 
-        <!-- Historical Content Logs (Past Blogs Grid ordered Newest to Oldest) -->
         <section id="archive-section" class="space-y-6 hidden">
             <div class="border-b border-slate-200 pb-3">
-                <h3 class="text-lg font-bold tracking-tight text-slate-900 uppercase tracking-wider text-xs text-slate-400">Past Publications Archive</h3>
+                <h3 class="text-lg font-bold tracking-tight text-slate-400 uppercase tracking-wider text-xs">Past Publications Archive</h3>
             </div>
-
-            <!-- Grid container where earlier entries filter cleanly -->
-            <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Earlier entries are pushed here by Javascript engine -->
-            </div>
+            <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </section>
     </main>
 
-    <!-- Portfolio Tailored Footer Layer -->
     <footer class="bg-slate-950 text-slate-100 pt-16 pb-12 px-4 sm:px-6 lg:px-8 border-t border-slate-900 mt-24">
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col md:flex-row items-center md:justify-between gap-8 pb-12 border-b border-white/5">
@@ -137,86 +112,60 @@
                         <p class="text-sm text-slate-400">Real estate Enthusiast</p>
                     </div>
                 </div>
-
                 <div class="flex items-center space-x-4">
-                    <a href="https://www.linkedin.com/in/edmund-lim-iamxlg?utm_source=share_via&utm_content=profile&utm_medium=member_ios" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white/10 hover:text-white transition-all text-xl" title="LinkedIn Profile">
-                        <i class="fa-brands fa-linkedin-in"></i>
-                    </a>
-                    <a href="https://www.tiktok.com/@iamxiaolinger?_r=1&_t=ZS-96sbc2p68wR" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white/10 hover:text-white transition-all text-xl" title="TikTok Channel">
-                        <i class="fa-brands fa-tiktok"></i>
-                    </a>
+                    <a href="https://www.linkedin.com/in/edmund-lim-iamxlg?utm_source=share_via&utm_content=profile&utm_medium=member_ios" target="_blank" class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white/10 hover:text-white text-xl"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://www.tiktok.com/@iamxiaolinger?_r=1&_t=ZS-96sbc2p68wR" target="_blank" class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white/10 hover:text-white text-xl"><i class="fa-brands fa-tiktok"></i></a>
                 </div>
             </div>
-
             <div class="pt-12 grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm text-slate-400">
                 <div class="space-y-3">
                     <p class="font-semibold text-white tracking-wider uppercase text-xs">Direct Contact Channels</p>
-                    <a href="tel:+6589179878" class="flex items-center space-x-3 hover:text-white transition-colors group">
-                        <i class="fa-solid fa-phone text-slate-500 group-hover:text-blue-400"></i>
-                        <span>+65 89179878</span>
-                    </a>
-                    <a href="mailto:Edmund.initiative@gmail.com" class="flex items-center space-x-3 hover:text-white transition-colors group">
-                        <i class="fa-solid fa-envelope text-slate-500 group-hover:text-blue-400"></i>
-                        <span>Edmund.initiative@gmail.com</span>
-                    </a>
+                    <a href="tel:+6589179878" class="flex items-center space-x-3 hover:text-white"><i class="fa-solid fa-phone text-slate-500"></i> <span>+65 89179878</span></a>
+                    <a href="mailto:Edmund.initiative@gmail.com" class="flex items-center space-x-3 hover:text-white"><i class="fa-solid fa-envelope text-slate-500"></i> <span>Edmund.initiative@gmail.com</span></a>
                 </div>
-                <div class="sm:text-right flex flex-col justify-end space-y-2 text-xs text-slate-500">
+                <div class="sm:text-right flex flex-col justify-end text-xs text-slate-500">
                     <p>&copy; 2026 Edmund Lim Initiative. All rights reserved.</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Chronological Sorting Data Engine Script -->
     <script>
         fetch('blogs.json')
             .then(response => response.json())
             .then(blogs => {
                 if (!blogs || blogs.length === 0) return;
 
-                // Hide informational fallback block and activate core content layout displays
                 document.getElementById('no-posts').classList.add('hidden');
                 document.getElementById('featured-section').classList.remove('hidden');
 
-                // Sort blogs array to keep chronological order (newest files to oldest files)
-                const chronologicalBlogs = [...blogs].reverse();
-
-                // 1. Map Newest Entry to Featured Slot Row
-                const latest = chronologicalBlogs[0];
+                const latest = blogs[0];
+                
+                // Bulletproof routing matching parameters
                 document.getElementById('featured-link').innerText = latest.title;
                 document.getElementById('featured-link').href = `post.html?id=${latest.id}`;
                 document.getElementById('featured-btn').href = `post.html?id=${latest.id}`;
+                
                 document.getElementById('featured-category').innerText = latest.category || "Market Update";
                 document.getElementById('featured-date').innerHTML = `<i class="fa-regular fa-calendar mr-1"></i> ${latest.date}`;
                 document.getElementById('featured-excerpt').innerText = latest.excerpt;
-                
-                if(latest.image) {
-                    document.getElementById('featured-image').src = latest.image;
-                } else {
-                    document.getElementById('featured-image').src = "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80";
-                }
+                document.getElementById('featured-image').src = latest.image || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80";
 
-                // Update Total Counter Tag
                 document.getElementById('archive-count').innerText = `${blogs.length} ${blogs.length === 1 ? 'Article' : 'Articles'} Available`;
 
-                // 2. Map Remaining Earlier History Logs into Feed Grid Below
-                const pastBlogs = chronologicalBlogs.slice(1);
+                const pastBlogs = blogs.slice(1);
                 if (pastBlogs.length > 0) {
                     document.getElementById('archive-section').classList.remove('hidden');
-                    
                     const grid = document.getElementById('blog-grid');
-                    grid.innerHTML = ''; // Wipe formatting tags out completely
+                    grid.innerHTML = '';
                     
                     pastBlogs.forEach(post => {
-                        const fallBackCardImg = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80";
-                        const card = `
+                        grid.innerHTML += `
                             <article class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
                                 <div>
-                                    <!-- Post Image Block Component -->
                                     <div class="h-48 bg-slate-100 overflow-hidden relative">
-                                        <img src="${post.image || fallBackCardImg}" alt="${post.title}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
+                                        <img src="${post.image || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80'}" class="w-full h-full object-cover">
                                     </div>
-                                    <!-- Text Metadata Block Component -->
                                     <div class="p-6 space-y-3">
                                         <div class="flex items-center space-x-2 text-xs font-medium text-slate-400">
                                             <span class="text-blue-600 font-semibold uppercase tracking-wider">${post.category || 'Insights'}</span>
@@ -226,25 +175,17 @@
                                         <h3 class="font-bold text-lg text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
                                             <a href="post.html?id=${post.id}">${post.title}</a>
                                         </h3>
-                                        <p class="text-slate-600 text-xs sm:text-sm line-clamp-3 font-light">
-                                            ${post.excerpt}
-                                        </p>
+                                        <p class="text-slate-600 text-xs sm:text-sm line-clamp-3 font-light">${post.excerpt}</p>
                                     </div>
                                 </div>
-                                <!-- Bottom Interaction Row -->
                                 <div class="px-6 py-4 border-t border-slate-50 flex items-center justify-between text-xs text-slate-400">
                                     <span><i class="fa-regular fa-clock mr-1"></i> 5 min read</span>
-                                    <a href="post.html?id=${post.id}" class="font-semibold text-blue-600 hover:text-blue-700 inline-flex items-center group-hover:text-blue-700">
-                                        Read Article <i class="fa-solid fa-angle-right ml-1 text-[10px]"></i>
-                                    </a>
+                                    <a href="post.html?id=${post.id}" class="font-semibold text-blue-600 hover:text-blue-700 inline-flex items-center">Read Article <i class="fa-solid fa-angle-right ml-1 text-[10px]"></i></a>
                                 </div>
-                            </article>
-                        `;
-                        grid.innerHTML += card;
+                            </article>`;
                     });
                 }
-            })
-            .catch(err => console.error("Error reading automated data framework logs:", err));
+            }).catch(err => console.error("Error reading registry array logs:", err));
     </script>
 </body>
 </html>
