@@ -33,10 +33,10 @@
                 </div>
             </div>
 
-            <div class="p-6 sm:p-12 space-y-8">
+            <div class="p-6 sm:p-12 space-y-6">
                 <div class="space-y-4 border-b border-slate-100 pb-6">
                     <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider" id="post-category">Market Update</span>
-                    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950 leading-tight" id="post-title">Loading Article Content...</h1>
+                    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950 leading-tight" id="post-title">Loading Article Content...</h1>
                     <div class="flex items-center text-slate-400 text-xs font-medium space-x-2">
                         <span id="post-date"><i class="fa-regular fa-calendar mr-1"></i> Syncing...</span>
                         <span>•</span>
@@ -44,7 +44,8 @@
                     </div>
                 </div>
 
-                <div id="post-content" class="text-slate-700 leading-relaxed space-y-6 font-light text-base sm:text-lg prose max-w-none">
+                <!-- Clean, non-bold, small/medium structural paragraph layout output -->
+                <div id="post-content" class="text-slate-600 space-y-6 font-normal text-sm sm:text-base leading-relaxed">
                     <div class="text-center py-12 text-slate-300">
                         <i class="fa-solid fa-circle-notch fa-spin text-3xl text-blue-600 mb-4"></i>
                         <p class="text-slate-400 text-sm font-normal">Assembling analysis structure logs...</p>
@@ -97,23 +98,41 @@
                     imgElement.classList.remove('hidden');
                     document.getElementById('image-loader').classList.add('hidden');
                     
-                    const formattedHtml = post.content
-                        .split('\n\n')
-                        .map(p => {
-                            let text = p.trim();
-                            if (text.startsWith('###')) {
-                                return `<h3 class="text-xl font-bold text-slate-900 mt-6 mb-2 tracking-tight">${text.replace(/###/g, '').trim()}</h3>`;
-                            } else if (text.startsWith('##')) {
-                                return `<h2 class="text-2xl font-bold text-slate-950 mt-8 mb-3 tracking-tight">${text.replace(/##/g, '').trim()}</h2>`;
-                            } else if (text.startsWith('-') || text.startsWith('*')) {
-                                const listItems = text.split(/\n[\-\*]\s/).map(li => `<li class="ml-4 list-disc font-light mb-1">${li.replace(/^[\-\*]\s/, '')}</li>`).join('');
-                                return `<ul class="space-y-1 my-4">${listItems}</ul>`;
-                            }
-                            return `<p class="mb-4 text-slate-700 leading-relaxed font-light">${text}</p>`;
-                        })
-                        .join('');
+                    // Fixed Markdown layout engine parser
+                    const rawLines = post.content.split('\n');
+                    let htmlOutput = '';
+                    let inList = false;
+
+                    rawLines.forEach(line => {
+                        let cleanLine = line.trim();
+                        if (!cleanLine) return;
+
+                        // Check headings
+                        if (cleanLine.startsWith('###')) {
+                            if (inList) { htmlOutput += '</ul>'; inList = false; }
+                            htmlOutput += `<h3 class="text-lg font-bold text-slate-900 mt-6 mb-2 pt-2">${cleanLine.replace(/^###\s*/, '')}</h3>`;
+                        } else if (cleanLine.startsWith('##')) {
+                            if (inList) { htmlOutput += '</ul>'; inList = false; }
+                            htmlOutput += `<h2 class="text-xl font-bold text-slate-950 mt-8 mb-3 pt-3 border-b border-slate-100 pb-1">${cleanLine.replace(/^##\s*/, '')}</h2>`;
+                        } else if (cleanLine.startsWith('#')) {
+                            if (inList) { htmlOutput += '</ul>'; inList = false; }
+                            htmlOutput += `<h2 class="text-xl font-bold text-slate-950 mt-8 mb-3 pt-3 border-b border-slate-100 pb-1">${cleanLine.replace(/^#\s*/, '')}</h2>`;
+                        }
+                        // Check list items
+                        else if (cleanLine.startsWith('-') || cleanLine.startsWith('*')) {
+                            if (!inList) { htmlOutput += '<ul class="list-disc pl-5 my-4 space-y-1 text-slate-600 text-sm">'; inList = true; }
+                            htmlOutput += `<li>${cleanLine.replace(/^[\-\*]\s*/, '')}</li>`;
+                        } 
+                        // Normal body paragraphs
+                        else {
+                            if (inList) { htmlOutput += '</ul>'; inList = false; }
+                            htmlOutput += `<p class="text-slate-600 text-sm sm:text-base font-normal leading-relaxed mb-4">${cleanLine}</p>`;
+                        }
+                    });
+
+                    if (inList) { htmlOutput += '</ul>'; }
                         
-                    document.getElementById('post-content').innerHTML = formattedHtml;
+                    document.getElementById('post-content').innerHTML = htmlOutput;
                 } else {
                     document.getElementById('post-title').innerText = "Article Missing";
                     document.getElementById('post-content').innerHTML = `<p class="text-slate-500 text-center py-12">The requested analysis entry is currently unavailable.</p>`;
