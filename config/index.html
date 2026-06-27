@@ -1,0 +1,60 @@
+<script>
+    // Fetch the automated blog list 
+    fetch('blogs.json')
+        .then(response => response.json())
+        .then(blogs => {
+            if (!blogs || blogs.length === 0) return;
+
+            // Sort newest first
+            blogs.reverse();
+
+            // 1. Populate Featured Post
+            const latest = blogs[0];
+            document.getElementById('featured-title').innerText = latest.title;
+            document.getElementById('featured-category').innerText = latest.category || "Market Trends";
+            document.getElementById('featured-date').innerText = latest.date;
+            document.getElementById('featured-excerpt').innerText = latest.excerpt;
+            if(latest.image) document.getElementById('featured-image').src = latest.image;
+            document.getElementById('featured-title').parentElement.href = `post.html?id=${latest.id}`;
+            document.getElementById('featured-title').parentElement.nextElementSibling.nextElementSibling.querySelector('a').href = `post.html?id=${latest.id}`;
+
+            // Update Total Archive Counter
+            document.getElementById('archive-count').innerText = `${blogs.length} Articles Available`;
+
+            // 2. Populate Past Publications Grid
+            const grid = document.getElementById('blog-grid');
+            grid.innerHTML = ''; 
+
+            const pastBlogs = blogs.slice(1); 
+            pastBlogs.forEach(post => {
+                const card = `
+                    <article class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+                        <div>
+                            <div class="h-48 bg-slate-100 overflow-hidden relative">
+                                <img src="${post.image || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
+                            </div>
+                            <div class="p-6 space-y-3">
+                                <div class="flex items-center space-x-2 text-xs font-medium text-slate-400">
+                                    <span class="text-blue-600 font-semibold uppercase tracking-wider">${post.category || 'Insights'}</span>
+                                    <span>•</span>
+                                    <span>${post.date}</span>
+                                </div>
+                                <h3 class="font-bold text-lg text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                                    <a href="post.html?id=${post.id}">${post.title}</a>
+                                </h3>
+                                <p class="text-slate-600 text-xs sm:text-sm line-clamp-3 font-light">
+                                    ${post.excerpt}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4 border-t border-slate-50 flex items-center justify-between text-xs text-slate-400">
+                            <span><i class="fa-regular fa-clock mr-1"></i> 5 min read</span>
+                            <a href="post.html?id=${post.id}" class="font-semibold text-blue-600 hover:text-blue-700">Read Article</a>
+                        </div>
+                    </article>
+                `;
+                grid.innerHTML += card;
+            });
+        })
+        .catch(err => console.error("Error loading blog index updates:", err));
+</script>
