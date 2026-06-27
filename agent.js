@@ -45,7 +45,6 @@ async function runPipeline() {
     {
       "title": "An engaging, professional article title",
       "excerpt": "A short, catchy 2-sentence summary description of the article for the home page feed.",
-      "imageSearchKeyword": "one or two clean words for a luxury building image search like 'penthouse', 'skyscraper', 'condo', 'apartment', or 'interior'",
       "content": "The full blog article text written in clean paragraphs. Use ## for major section headers. Do NOT double-space or write text strings that look like titles inside the paragraphs."
     }
   `;
@@ -75,9 +74,9 @@ async function runPipeline() {
   
   const articleId = String(Date.now());
   
-  // Dynamic image resolution routing mapping logic based on AI keyword selection
-  const searchKeyword = generatedData.imageSearchKeyword ? encodeURIComponent(generatedData.imageSearchKeyword.trim()) : 'luxury-condo';
-  const dynamicImageUri = `https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80&sig=${articleId}&q=${searchKeyword}`;
+  // Creates a completely unique, randomized photo selection from modern architectural pools each execution
+  const randomPhotoId = Math.floor(Math.random() * 1000);
+  const dynamicImageUri = `https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80&sig=${randomPhotoId}`;
 
   const newPostEntry = {
     id: articleId,
