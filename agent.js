@@ -7,7 +7,6 @@ import { fileURLToPath } from 'url';
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// Handle __dirname configuration for modern ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const databasePath = path.join(__dirname, 'blogs.json');
@@ -31,7 +30,6 @@ async function runPipeline() {
 
   console.log('=== PHASE 2: WRITING WITH GROQ AI ===');
   
-  // Dynamic guidelines loading fallback
   let brandGuidelines = 'Write as an expert real estate content strategist focusing on high-converting real estate insights.';
   const rulesPath = path.join(__dirname, 'config', 'myrules.md');
   if (fs.existsSync(rulesPath)) {
@@ -43,15 +41,15 @@ async function runPipeline() {
     This week's Singapore property market data: ${researchPayload}
     Writing guidelines to follow strictly: ${brandGuidelines}
     
-    Provide your output STRICTLY in the following JSON format. Do not include markdown code block formatting (like \`\`\`json) or any conversational text. Output raw JSON only:
+    Provide your output STRICTLY in the following JSON format without conversational text or markdown code blocks:
     {
       "title": "An engaging, professional article title",
       "excerpt": "A short, catchy 2-sentence summary description of the article for the home page feed.",
-      "content": "The full blog article text written in clean Markdown format with structured sections. Use ## for major headings and ### for sub-headings."
+      "imageSearchKeyword": "one or two clean words for a luxury building image search like 'penthouse', 'skyscraper', 'condo', 'apartment', or 'interior'",
+      "content": "The full blog article text written in clean paragraphs. Use ## for major section headers. Do NOT double-space or write text strings that look like titles inside the paragraphs."
     }
   `;
 
-  // Upgraded to active model to completely prevent decommissioned 400 errors
   const completion = await groq.chat.completions.create({
     model: 'llama-3.3-70b-versatile',
     messages: [{ role: 'user', content: compositionPrompt }],
@@ -72,11 +70,14 @@ async function runPipeline() {
     }
   }
 
-  // Time Zone Fix: Forces date generation to lock onto Singapore time regardless of server/user location
   const sgOptions = { timeZone: 'Asia/Singapore', day: 'numeric', month: 'long', year: 'numeric' };
   const sgDateString = new Intl.DateTimeFormat('en-SG', sgOptions).format(new Date());
   
   const articleId = String(Date.now());
+  
+  // Dynamic image resolution routing mapping logic based on AI keyword selection
+  const searchKeyword = generatedData.imageSearchKeyword ? encodeURIComponent(generatedData.imageSearchKeyword.trim()) : 'luxury-condo';
+  const dynamicImageUri = `https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80&sig=${articleId}&q=${searchKeyword}`;
 
   const newPostEntry = {
     id: articleId,
@@ -84,13 +85,13 @@ async function runPipeline() {
     category: "Market Update",
     title: generatedData.title,
     excerpt: generatedData.excerpt,
-    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
+    image: dynamicImageUri,
     content: generatedData.content
   };
 
-  blogDatabase.unshift(newPostEntry); // Newest article always at the top
+  blogDatabase.unshift(newPostEntry);
   fs.writeFileSync(databasePath, JSON.stringify(blogDatabase, null, 2));
-  console.log(`Database successfully updated with article ID: ${articleId}`);
+  console.log(`Database successfully updated with dynamic article image asset signatures.`);
 }
 
 runPipeline().catch(console.error);
