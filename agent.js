@@ -1,11 +1,16 @@
-const fs = require('fs');
-const path = require('path');
-const { Groq } = require('groq-sdk');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { Groq } from 'groq-sdk';
 
 // Initialize Groq client
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY
 });
+
+// Fix for __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const blogsJsonPath = path.join(__dirname, 'blogs.json');
 
